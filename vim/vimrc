@@ -1,0 +1,240 @@
+" lhchavez
+
+" Plugins {{{
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'rking/ag.vim'
+let g:ag_working_path_mode="r"
+
+Plugin 'sjl/gundo.vim'
+
+Plugin 'ctrlpvim/ctrlp.vim'
+
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+set laststatus=2 " Always display the statusline in all windows
+set noshowmode   " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+Plugin 'derekwyatt/vim-scala'
+
+Plugin 'scrooloose/nerdtree'
+
+Plugin 'scrooloose/syntastic'
+
+Plugin 'w0ng/vim-hybrid'
+
+Plugin 'fatih/vim-go'
+
+Plugin 'rdnetto/YCM-Generator'
+
+Plugin 'Valloric/YouCompleteMe', {
+			\ 'build' : {
+			\     'mac' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+			\     'unix' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+			\     'windows' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+			\     'cygwin' : './install.py --clang-completer --system-libclang --omnisharp-completer'
+			\    }
+			\ }
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+" }}}
+" Colors {{{
+
+" Magic incantations to get the correct terminal escapes, regardless of
+" terminal. Needs vim 7.4.1799+.
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
+set termguicolors
+
+set background=dark
+colorscheme hybrid
+let g:airline_powerline_fonts = 1
+let g:airline_theme='hybrid'
+syntax enable                " enable syntax processing
+
+" }}}
+" Misc {{{
+
+" highlight last inserted text
+nnoremap gV `[v`]             
+
+set encoding=utf-8            " Unicode
+
+set autoindent                " Automatically indent 
+
+" Typo-fixer
+:command! WQ wq
+:command! Wq wq
+:command! W w
+:command! Q q
+
+" }}}
+" Spaces & Tabs {{{
+
+set tabstop=2                " number of visual spaces per TAB
+set softtabstop=2            " number of visual spaces per TAB
+set shiftwidth=2
+set smarttab
+set backspace=indent,eol,start
+
+" }}}
+" UI Layout {{{
+
+set number              " show line numbers
+set showcmd             " show command in bottom bar
+set wildmenu            " visual autocomplete for command menu
+set wildmode=list:longest,full
+set lazyredraw          " redraw only when we need to.
+set showmatch           " highlight matching [{()}]
+
+" }}}
+" Searching {{{
+
+set incsearch           " search as characters are entered
+set hlsearch            " highlight matches
+" turn off search highlight
+nnoremap <leader><space> :nohlsearch<CR>
+set ignorecase          " Case-insensitive search
+set smartcase           " But switch to case-sensitive if you add an uppercase
+
+" }}}
+" Movement {{{
+
+" make cursor move as expected with wrapped lines
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+
+" Ctrl+arrows navigates through windows
+map <ESC>[D <ESC><C-w>h
+map <ESC>[B <ESC><C-w>j
+map <ESC>[A <ESC><C-w>k
+map <ESC>[C <ESC><C-w>l
+map! <ESC>[D <ESC><C-w>h
+map! <ESC>[B <ESC><C-w>j
+map! <ESC>[A <ESC><C-w>k
+map! <ESC>[C <ESC><C-w>l
+
+" }}}
+" Leader Shortcuts {{{
+
+" toggle gundo
+nnoremap <leader>u :GundoToggle<CR>
+
+" edit vimrc/zshrc and load vimrc bindings
+nnoremap <leader>ev :vsp $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>eb :source ~/.bashrc<CR>
+
+" save session
+nnoremap <leader>s :mksession<CR>
+
+" open ag.vim
+nnoremap <leader>a :Ag 
+
+" YCM GoToDefinition
+nnoremap <leader>] :YcmCompleter GoToDefinition<CR>
+
+" }}}
+" CtrlP {{{
+
+" CtrlP settings
+let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_cmd = "CtrlPMixed"
+let g:ctrlp_mruf_relative = 1
+
+set wildignore+=*.class,.git
+
+" }}}
+" NERDTree {{{
+
+" Invoke NERDTree
+map <C-n> :NERDTreeToggle<CR>
+
+" Close vim if the only window left is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" }}}
+" Syntastic {{{
+
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+
+" }}}
+" YCM {{{
+
+let g:ycm_collect_identifiers_from_tags_files = 1
+
+" }}}
+" AutoGroups {{{
+
+augroup configgroup
+    autocmd!
+    autocmd VimEnter * highlight clear SignColumn
+    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md :call <SID>StripTrailingWhitespaces()
+    autocmd FileType php setlocal expandtab
+    autocmd FileType php setlocal tabstop=4
+    autocmd FileType php setlocal shiftwidth=4
+    autocmd FileType java setlocal noexpandtab
+    autocmd FileType java setlocal tabstop=4
+    autocmd FileType java setlocal shiftwidth=4
+    autocmd FileType java setlocal list
+    autocmd FileType java setlocal listchars=tab:+\ ,eol:-
+    autocmd FileType python setlocal commentstring=#\ %s
+    autocmd BufEnter Makefile setlocal noexpandtab
+    autocmd BufEnter *.sh setlocal tabstop=2
+    autocmd BufEnter *.sh setlocal shiftwidth=2
+    autocmd BufEnter *.sh setlocal softtabstop=2
+augroup END
+
+" Return to last edit position when opening files
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+
+" }}}
+" Backups {{{
+
+set nobackup       " no backup files
+set nowritebackup  " only in case you don't want a backup file while editing
+set noswapfile     " no swap files
+
+" }}}
+" Custom Functions {{{
+
+" strips trailing whitespace at the end of files. this
+" is called on buffer write in the autogroup above.
+function! <SID>StripTrailingWhitespaces()
+    " save last search & cursor position
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    let @/=_s
+    call cursor(l, c)
+endfunction
+
+" }}}
+" Clang Format {{{
+
+map <C-I> :pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>
+imap <C-I> <c-o>:pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>i
+nnoremap <leader>cf :%pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>
+
+" }}}
+
+" vim:foldmethod=marker:foldlevel=0
