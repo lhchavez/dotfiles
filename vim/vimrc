@@ -49,6 +49,13 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 " }}}
+" gVim settings {{{
+
+if has('gui_running')
+    set guifont=Luculent\ 10
+endif
+
+" }}}
 " Colors {{{
 
 " Magic incantations to get the correct terminal escapes, regardless of
