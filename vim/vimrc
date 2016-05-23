@@ -36,13 +36,13 @@ Plugin 'fatih/vim-go'
 Plugin 'rdnetto/YCM-Generator'
 
 Plugin 'Valloric/YouCompleteMe', {
-			\ 'build' : {
-			\     'mac' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-			\     'unix' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-			\     'windows' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-			\     'cygwin' : './install.py --clang-completer --system-libclang --omnisharp-completer'
-			\    }
-			\ }
+    \ 'build' : {
+    \     'mac' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+    \     'unix' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+    \     'windows' : './install.py --clang-completer --system-libclang --omnisharp-completer',
+    \     'cygwin' : './install.py --clang-completer --system-libclang --omnisharp-completer'
+    \    }
+    \ }
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -237,4 +237,4 @@ nnoremap <leader>cf :%pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>
 
 " }}}
 
-" vim:foldmethod=marker:foldlevel=0
+" vim:foldmethod=marker:foldlevel=0:tabstop=4:shiftwidth=4:expandtab
