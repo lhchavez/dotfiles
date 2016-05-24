@@ -1,5 +1,12 @@
 " lhchavez
 
+" Local overrides {{{
+
+if filereadable(expand('~/.vimrc_local'))
+    source ~/.vimrc_local
+endif
+
+" }}}
 " Plugins {{{
 
 set nocompatible              " be iMproved, required
@@ -9,12 +16,19 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+" Let Vundle manage itself
+Plugin 'VundleVim/Vundle.vim'
+
 Plugin 'rking/ag.vim'
 let g:ag_working_path_mode="r"
 
 Plugin 'sjl/gundo.vim'
 
 Plugin 'ctrlpvim/ctrlp.vim'
+
+Plugin 'FelikZ/ctrlp-py-matcher'
+
+Plugin 'tpope/vim-abolish'
 
 Plugin 'tpope/vim-fugitive'
 
@@ -35,14 +49,9 @@ Plugin 'fatih/vim-go'
 
 Plugin 'rdnetto/YCM-Generator'
 
-Plugin 'Valloric/YouCompleteMe', {
-    \ 'build' : {
-    \     'mac' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-    \     'unix' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-    \     'windows' : './install.py --clang-completer --system-libclang --omnisharp-completer',
-    \     'cygwin' : './install.py --clang-completer --system-libclang --omnisharp-completer'
-    \    }
-    \ }
+if filereadable(expand('~/.vimrc_ycm'))
+  source ~/.vimrc_ycm
+endif
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -58,11 +67,16 @@ endif
 " }}}
 " Colors {{{
 
-" Magic incantations to get the correct terminal escapes, regardless of
-" terminal. Needs vim 7.4.1799+.
-set t_8f=[38;2;%lu;%lu;%lum
-set t_8b=[48;2;%lu;%lu;%lum
-set termguicolors
+if exists("g:disable_truecolor") && g:disable_truecolor
+    set t_Co=256
+    let g:hybrid_custom_term_colors = 1
+else
+    " Magic incantations to get the correct terminal escapes, regardless of
+    " terminal. Needs vim 7.4.1799+.
+    set t_8f=[38;2;%lu;%lu;%lum
+    set t_8b=[48;2;%lu;%lu;%lum
+    set termguicolors
+endif
 
 set background=dark
 colorscheme hybrid
@@ -86,6 +100,9 @@ set autoindent                " Automatically indent
 :command! W w
 :command! Q q
 
+" Better tags handling
+set tags=./tags;/
+
 " }}}
 " Spaces & Tabs {{{
 
@@ -104,6 +121,14 @@ set wildmenu            " visual autocomplete for command menu
 set wildmode=list:longest,full
 set lazyredraw          " redraw only when we need to.
 set showmatch           " highlight matching [{()}]
+
+set ruler               " Show cursor row and column
+
+set scrolloff=5         " keep at least 5 lines above/below
+set sidescrolloff=5     " keep at least 5 lines left/right
+
+set laststatus=2        " Always display the statusline in all windows
+set noshowmode          " Hide the default mode text
 
 " }}}
 " Searching {{{
@@ -132,16 +157,27 @@ map! <ESC>[B <ESC><C-w>j
 map! <ESC>[A <ESC><C-w>k
 map! <ESC>[C <ESC><C-w>l
 
+" make ctrl+cursor move through window panes.
+map <ESC>[1;5D <ESC><C-w>h
+map <ESC>[1;5A <ESC><C-w>j
+map <ESC>[1;5B <ESC><C-w>k
+map <ESC>[1;5C <ESC><C-w>l
+map! <ESC>[1;5D <ESC><C-w>h
+map! <ESC>[1;5A <ESC><C-w>j
+map! <ESC>[1;5B <ESC><C-w>k
+map! <ESC>[1;5C <ESC><C-w>l
+
 " }}}
 " Leader Shortcuts {{{
 
 " toggle gundo
 nnoremap <leader>u :GundoToggle<CR>
 
-" edit vimrc/zshrc and load vimrc bindings
+" edit vimrc/bashrc and load vimrc bindings
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
-nnoremap <leader>eb :source ~/.bashrc<CR>
+nnoremap <leader>eb :vsp ~/.bashrc<CR>
+nnoremap <leader>et :vsp ~/.tmux.conf<CR>
 
 " save session
 nnoremap <leader>s :mksession<CR>
@@ -158,10 +194,46 @@ nnoremap <leader>] :YcmCompleter GoToDefinition<CR>
 " CtrlP settings
 let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
+
+" Do not clear filenames cache, to improve CtrlP startup
+" You can manualy clear it by <F5>
+let g:ctrlp_clear_cache_on_exit = 0
+
+" Set no file limit
+let g:ctrlp_max_files = 0
+
+" Limit CtrlP to the ancestor with a '.git' directory.
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+" Set delay to prevent extra search
+let g:ctrlp_lazy_update = 350
+
+" ag is much faster than the regular command.
+if executable("ag")
+    set grepprg=ag\ --nogroup\ --nocolor
+    let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
+          \ --ignore .git
+          \ --ignore .svn
+          \ --ignore .hg
+          \ --ignore .DS_Store
+          \ --ignore "**/*.pyc"
+          \ --ignore .git5_specs
+          \ --ignore review
+          \ -g ""'
+endif
+
+" CtrlPMixed is much more useful than regular CtrlP
 let g:ctrlp_cmd = "CtrlPMixed"
+" But it needs this otherwise you get a bunch of files
+" outside the repo.
 let g:ctrlp_mruf_relative = 1
+
+" PyMatcher for CtrlP. This speeds up matching considerably.
+if !has('python')
+    echo 'In order to use pymatcher plugin, you need +python compiled vim'
+else
+    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+endif
 
 set wildignore+=*.class,.git
 
@@ -179,11 +251,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-
-" }}}
-" YCM {{{
-
-let g:ycm_collect_identifiers_from_tags_files = 1
+let g:syntastic_stl_format="L%F"
 
 " }}}
 " AutoGroups {{{
@@ -195,7 +263,6 @@ augroup configgroup
     autocmd FileType php setlocal expandtab
     autocmd FileType php setlocal tabstop=4
     autocmd FileType php setlocal shiftwidth=4
-    autocmd FileType java setlocal noexpandtab
     autocmd FileType java setlocal tabstop=4
     autocmd FileType java setlocal shiftwidth=4
     autocmd FileType java setlocal list
@@ -239,9 +306,15 @@ endfunction
 " }}}
 " Clang Format {{{
 
-map <C-I> :pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>
-imap <C-I> <c-o>:pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>i
-nnoremap <leader>cf :%pyf /usr/share/vim/addons/syntax/clang-format-3.6.py<CR>
+let g:clang_format_path = '/usr/bin/clang-format'
+map <C-I> :pyf /usr/lib/clang-format/clang-format.py<CR>
+nnoremap <leader>cf :%pyf /usr/lib/clang-format/clang-format.py<CR>
+
+" }}}
+" per-project .vimrc {{{
+
+set exrc
+set secure
 
 " }}}
 
