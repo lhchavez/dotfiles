@@ -1,0 +1,9 @@
+[submodule "third_party/tmux"]
+	path = third_party/tmux
+	url = https://github.com/tmux/tmux.git
+[submodule "third_party/tomorrow-theme"]
+	path = third_party/tomorrow-theme
+	url = https://github.com/chriskempson/tomorrow-theme.git
+[submodule "third_party/vim"]
+	path = third_party/vim
+	url = https://github.com/vim/vim.git
