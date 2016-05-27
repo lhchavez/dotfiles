@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT=`realpath $0`
 ROOT=`dirname $SCRIPT`
 ROOT=`dirname $ROOT`

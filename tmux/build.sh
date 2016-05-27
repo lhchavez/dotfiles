@@ -2,13 +2,17 @@
 
 set -e
 
-if [ ! -d ~/tmux ]; then
-	git clone https://github.com/tmux/tmux.git ~/tmux
-	cd ~/tmux
-	git checkout 2.2
+SCRIPT=`realpath $0`
+ROOT=`dirname $SCRIPT`
+ROOT=`dirname $ROOT`
+
+if [ ! -d $ROOT/third_party/tmux/.git ]; then
+	(cd $ROOT && git submodule update --init third_party/tmux)
 fi
+
 sudo apt-get build-dep tmux
-cd ~/tmux
+
+cd $ROOT/third_party/tmux
 if [ -f Makefile ]; then
 	make clean
 fi

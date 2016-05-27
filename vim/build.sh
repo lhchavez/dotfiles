@@ -2,13 +2,17 @@
 
 set -e
 
-if [ ! -d ~/vim ]; then
-	git clone https://github.com/vim/vim.git ~/vim
-	cd ~/vim
-	git checkout v7.4.1832
+SCRIPT=`realpath $0`
+ROOT=`dirname $SCRIPT`
+ROOT=`dirname $ROOT`
+
+if [ ! -d $ROOT/third_party/vim/.git ]; then
+	(cd $ROOT && git submodule update --init third_party/vim)
 fi
-cd ~/vim
+
 sudo apt-get build-dep vim-gtk
+
+cd $ROOT/third_party/vim
 make distclean
 LDFLAGS='-Wl,-E  -Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed' \
 	CFLAGS='-Wdate-time  -g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1' \
