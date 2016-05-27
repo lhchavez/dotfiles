@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ ! -d ~/tmux ]; then
 	git clone https://github.com/tmux/tmux.git ~/tmux
 	cd ~/tmux
@@ -7,6 +9,9 @@ if [ ! -d ~/tmux ]; then
 fi
 sudo apt-get build-dep tmux
 cd ~/tmux
+if [ -f Makefile ]; then
+	make clean
+fi
 sh autogen.sh
 ./configure --prefix=/usr
 make -j6
