@@ -307,8 +307,13 @@ endfunction
 " Clang Format {{{
 
 let g:clang_format_path = '/usr/bin/clang-format'
-map <C-I> :pyf /usr/lib/clang-format/clang-format.py<CR>
-nnoremap <leader>cf :%pyf /usr/lib/clang-format/clang-format.py<CR>
+if has('python3')
+    map <C-I> :py3f ~/dotfiles/vim/clang-format.py<CR>
+    nnoremap <leader>cf :%py3f ~/dotfiles/vim/clang-format.py<CR>
+elseif has('python')
+    map <C-I> :pyf /usr/lib/clang-format/clang-format.py<CR>
+    nnoremap <leader>cf :%pyf /usr/lib/clang-format/clang-format.py<CR>
+endif
 
 " }}}
 " per-project .vimrc {{{
