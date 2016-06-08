@@ -188,6 +188,9 @@ nnoremap <leader>a :Ag
 " YCM GoToDefinition
 nnoremap <leader>] :YcmCompleter GoToDefinition<CR>
 
+" Pretty-print JSON
+nnoremap <leader>j :%!python -m json.tool<CR>:set syntax=json<CR>
+
 " }}}
 " CtrlP {{{
 
