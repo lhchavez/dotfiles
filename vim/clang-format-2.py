@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 # This file is a minimal clang-format vim-integration. To install:
 # - Change 'binary' if clang-format is not on the path (see below).
 # - Add to your .vimrc:
@@ -27,16 +25,18 @@
 #
 # It operates on the current, potentially unsaved buffer and does not create
 # or save any files. To revert a formatting, just undo.
+from __future__ import print_function
 
 import difflib
 import json
+import platform
 import subprocess
 import sys
 import vim
 
 # set g:clang_format_path to the path to clang-format if it is not on the path
 # Change this to the full path if clang-format is not on the path.
-binary = 'clang-format-3.8'
+binary = 'clang-format-3.7'
 if vim.eval('exists("g:clang_format_path")') == "1":
   binary = vim.eval('g:clang_format_path')
 
@@ -49,9 +49,15 @@ fallback_style = None
 if vim.eval('exists("g:clang_format_fallback_style")') == "1":
   fallback_style = vim.eval('g:clang_format_fallback_style')
 
+def get_buffer(encoding):
+  if platform.python_version_tuple()[0] == '3':
+    return vim.current.buffer
+  return [ line.decode(encoding) for line in vim.current.buffer ]
+
 def main():
   # Get the current text.
-  buf = vim.current.buffer
+  encoding = vim.eval("&encoding")
+  buf = get_buffer(encoding)
   text = '\n'.join(buf)
 
   # Determine range to format.
@@ -81,23 +87,25 @@ def main():
     command.extend(['-fallback-style', fallback_style])
   if vim.current.buffer.name:
     command.extend(['-assume-filename', vim.current.buffer.name])
-  p = subprocess.run(command,
-                     stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                     input=text, startupinfo=startupinfo,
-                     universal_newlines=True)
+  p = subprocess.Popen(command,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                       stdin=subprocess.PIPE, startupinfo=startupinfo)
+  stdout, stderr = p.communicate(input=text.encode(encoding))
 
   # If successful, replace buffer contents.
-  if p.stderr:
-    print(p.stderr)
+  if stderr:
+    print(stderr)
 
-  if not p.stdout:
-    print('No output from clang-format (crashed?).\n' +
-        'Please report to bugs.llvm.org.')
+  if not stdout:
+    print(
+        'No output from clang-format (crashed?).\n'
+        'Please report to bugs.llvm.org.'
+    )
   else:
-    lines = p.stdout.split('\n')
+    lines = stdout.decode(encoding).split('\n')
     output = json.loads(lines[0])
     lines = lines[1:]
-    sequence = difflib.SequenceMatcher(None, vim.current.buffer, lines)
+    sequence = difflib.SequenceMatcher(None, buf, lines)
     for op in reversed(sequence.get_opcodes()):
       if op[0] is not 'equal':
         vim.current.buffer[op[1]:op[2]] = lines[op[3]:op[4]]

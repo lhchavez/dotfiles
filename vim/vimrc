@@ -49,6 +49,8 @@ Plugin 'fatih/vim-go'
 
 Plugin 'rdnetto/YCM-Generator'
 
+Plugin 'posva/vim-vue'
+
 if filereadable(expand('~/.vimrc_ycm'))
   source ~/.vimrc_ycm
 endif
@@ -262,7 +264,16 @@ let g:syntastic_stl_format="L%F"
 augroup configgroup
     autocmd!
     autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md :call <SID>StripTrailingWhitespaces()
+    autocmd BufWritePre *.php,*.py,*.js,*.vue,*.tpl,*.txt,*.hs,*.java,*.md :call <SID>StripTrailingWhitespaces()
+    autocmd FileType tpl setlocal expandtab
+    autocmd FileType tpl setlocal tabstop=2
+    autocmd FileType tpl setlocal shiftwidth=2
+    autocmd FileType javascript setlocal expandtab
+    autocmd FileType javascript setlocal tabstop=2
+    autocmd FileType javascript setlocal shiftwidth=2
+    autocmd FileType smarty setlocal expandtab
+    autocmd FileType smarty setlocal tabstop=2
+    autocmd FileType smarty setlocal shiftwidth=2
     autocmd FileType php setlocal expandtab
     autocmd FileType php setlocal tabstop=4
     autocmd FileType php setlocal shiftwidth=4
@@ -276,6 +287,9 @@ augroup configgroup
     autocmd BufEnter *.sh setlocal tabstop=2
     autocmd BufEnter *.sh setlocal shiftwidth=2
     autocmd BufEnter *.sh setlocal softtabstop=2
+    autocmd BufEnter *.vue setlocal expandtab
+    autocmd BufEnter *.vue setlocal tabstop=2
+    autocmd BufEnter *.vue setlocal shiftwidth=2
 augroup END
 
 " Return to last edit position when opening files
@@ -314,8 +328,8 @@ if has('python3')
     map <C-I> :py3f ~/dotfiles/vim/clang-format.py<CR>
     nnoremap <leader>cf :%py3f ~/dotfiles/vim/clang-format.py<CR>
 elseif has('python')
-    map <C-I> :pyf /usr/lib/clang-format/clang-format.py<CR>
-    nnoremap <leader>cf :%pyf /usr/lib/clang-format/clang-format.py<CR>
+    map <C-I> :pyf ~/dotfiles/vim/clang-format-2.py<CR>
+    nnoremap <leader>cf :%pyf ~/dotfiles/vim/clang-format-2.py<CR>
 endif
 
 " }}}
