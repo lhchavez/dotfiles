@@ -51,6 +51,11 @@ Plugin 'rdnetto/YCM-Generator'
 
 Plugin 'posva/vim-vue'
 
+Plugin 'leafgarland/typescript-vim'
+
+Plugin 'rust-lang/rust.vim'
+let g:rustfmt_autosave = 1
+
 if filereadable(expand('~/.vimrc_ycm'))
   source ~/.vimrc_ycm
 endif
