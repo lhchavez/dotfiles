@@ -10,7 +10,7 @@ if [ ! -d $ROOT/third_party/tmux/.git ]; then
 	(cd $ROOT && git submodule update --init third_party/tmux)
 fi
 
-sudo apt-get build-dep tmux
+sudo apt build-dep -y tmux
 
 cd $ROOT/third_party/tmux
 if [ -f Makefile ]; then
