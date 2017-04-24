@@ -10,6 +10,8 @@ if [ ! -d $ROOT/third_party/vim/.git ]; then
 	(cd $ROOT && git submodule update --init third_party/vim)
 fi
 
+sudo apt install -y python3-dev
+
 cd $ROOT/third_party/vim
 make distclean
 LDFLAGS='-Wl,-E  -Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed' \
