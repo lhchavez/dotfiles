@@ -56,6 +56,8 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'rust-lang/rust.vim'
 let g:rustfmt_autosave = 1
 
+Plugin 'easymotion/vim-easymotion'
+
 if filereadable(expand('~/.vimrc_ycm'))
   source ~/.vimrc_ycm
 endif
