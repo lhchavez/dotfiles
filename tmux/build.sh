@@ -17,6 +17,6 @@ if [ -f Makefile ]; then
 	make clean
 fi
 sh autogen.sh
-./configure --prefix=/usr
+./configure --prefix=/usr --disable-maintainer-mode --disable-dependency-tracking --enable-utempter
 make -j6
 sudo make install
