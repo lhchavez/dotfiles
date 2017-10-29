@@ -168,12 +168,12 @@ map! <ESC>[C <ESC><C-w>l
 
 " make ctrl+cursor move through window panes.
 map <ESC>[1;5D <ESC><C-w>h
-map <ESC>[1;5A <ESC><C-w>j
-map <ESC>[1;5B <ESC><C-w>k
+map <ESC>[1;5B <ESC><C-w>j
+map <ESC>[1;5A <ESC><C-w>k
 map <ESC>[1;5C <ESC><C-w>l
 map! <ESC>[1;5D <ESC><C-w>h
-map! <ESC>[1;5A <ESC><C-w>j
-map! <ESC>[1;5B <ESC><C-w>k
+map! <ESC>[1;5B <ESC><C-w>j
+map! <ESC>[1;5A <ESC><C-w>k
 map! <ESC>[1;5C <ESC><C-w>l
 
 " }}}
