@@ -339,6 +339,18 @@ function! <SID>Prettier()
     call cursor(l, c)
 endfunction
 
+" invokes yapf on the current buffer
+function! <SID>Yapf()
+    " save last search & cursor position
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    %!yapf
+    let @/=_s
+    call cursor(l, c)
+endfunction
+
 " }}}
 " Formatting {{{
 
@@ -352,6 +364,7 @@ elseif has('python')
 endif
 
 nnoremap <leader>p :silent call <SID>Prettier()<CR>
+nnoremap <leader>y :silent call <SID>Yapf()<CR>
 
 " }}}
 " per-project .vimrc {{{
