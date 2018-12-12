@@ -263,7 +263,7 @@ set wildignore+=*.class,.git
 map <C-n> :silent call <SID>NERDTreeToggle()<CR>
 
 " Close vim if the only window left is NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && g:NERDTree.IsOpen()) | q | endif
 
 " }}}
 " Syntastic {{{
@@ -336,7 +336,11 @@ endfunction
 " toggles NERDTree, focusing the current buffer if not shown.
 function! <SID>NERDTreeToggle()
     if g:NERDTree.IsOpen()
-        call g:NERDTree.Close()
+        if winnr() == g:NERDTree.GetWinNum()
+            call g:NERDTree.Close()
+        else
+            :NERDTreeFocus
+        endif
     else
         :NERDTreeFind
     endif
