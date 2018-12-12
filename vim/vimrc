@@ -19,6 +19,9 @@ call vundle#begin()
 " Let Vundle manage itself
 Plugin 'VundleVim/Vundle.vim'
 
+" Sensible defaults.
+Plugin 'tpope/vim-sensible'
+
 Plugin 'rking/ag.vim'
 let g:ag_working_path_mode="r"
 
@@ -34,8 +37,6 @@ Plugin 'tpope/vim-fugitive'
 
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-set laststatus=2 " Always display the statusline in all windows
-set noshowmode   " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
 Plugin 'derekwyatt/vim-scala'
 
@@ -101,8 +102,6 @@ nnoremap gV `[v`]
 
 set encoding=utf-8            " Unicode
 
-set autoindent                " Automatically indent 
-
 " Typo-fixer
 :command! WQ wq
 :command! Wq wq
@@ -118,31 +117,23 @@ set tags=./tags;/
 set tabstop=2                " number of visual spaces per TAB
 set softtabstop=2            " number of visual spaces per TAB
 set shiftwidth=2
-set smarttab
-set backspace=indent,eol,start
+set list
 
 " }}}
 " UI Layout {{{
 
 set number              " show line numbers
 set showcmd             " show command in bottom bar
-set wildmenu            " visual autocomplete for command menu
 set wildmode=list:longest,full
 set lazyredraw          " redraw only when we need to.
 set showmatch           " highlight matching [{()}]
 
-set ruler               " Show cursor row and column
-
 set scrolloff=5         " keep at least 5 lines above/below
 set sidescrolloff=5     " keep at least 5 lines left/right
-
-set laststatus=2        " Always display the statusline in all windows
-set noshowmode          " Hide the default mode text
 
 " }}}
 " Searching {{{
 
-set incsearch           " search as characters are entered
 set hlsearch            " highlight matches
 " turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
@@ -286,8 +277,6 @@ augroup configgroup
     autocmd FileType php setlocal shiftwidth=4
     autocmd FileType java setlocal tabstop=4
     autocmd FileType java setlocal shiftwidth=4
-    autocmd FileType java setlocal list
-    autocmd FileType java setlocal listchars=tab:+\ ,eol:-
     autocmd FileType java setlocal formatprg=par\ -w100\ -T4
     autocmd FileType python setlocal commentstring=#\ %s
     autocmd BufEnter Makefile setlocal noexpandtab
