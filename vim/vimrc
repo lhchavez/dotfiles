@@ -277,9 +277,10 @@ augroup configgroup
     autocmd FileType php setlocal shiftwidth=4
     autocmd FileType java setlocal tabstop=4
     autocmd FileType java setlocal shiftwidth=4
-    autocmd FileType java setlocal formatprg=par\ -w100\ -T4
-    autocmd FileType python setlocal commentstring=#\ %s
+    autocmd FileType java setlocal textwidth=100
     autocmd BufEnter Makefile setlocal noexpandtab
+    autocmd BufEnter Makefile setlocal tabstop=8
+    autocmd BufEnter Makefile setlocal shiftwidth=8
     autocmd BufEnter *.sh setlocal tabstop=2
     autocmd BufEnter *.sh setlocal shiftwidth=2
     autocmd BufEnter *.sh setlocal softtabstop=2
