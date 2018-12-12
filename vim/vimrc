@@ -174,10 +174,10 @@ map! <ESC>[1;5C <ESC><C-w>l
 nnoremap <leader>u :GundoToggle<CR>
 
 " edit vimrc/bashrc and load vimrc bindings
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
-nnoremap <leader>eb :vsp ~/.bashrc<CR>
-nnoremap <leader>et :vsp ~/.tmux.conf<CR>
+nnoremap <leader>rve :vsp $MYVIMRC<CR>
+nnoremap <leader>rvs :source $MYVIMRC<CR>
+nnoremap <leader>rbe :vsp ~/.bashrc<CR>
+nnoremap <leader>rte :vsp ~/.tmux.conf<CR>
 
 " save session
 nnoremap <leader>s :mksession<CR>
@@ -346,14 +346,14 @@ endfunction
 let g:clang_format_path = '/usr/bin/clang-format'
 if has('python3')
     map <C-I> :py3f ~/dotfiles/vim/clang-format.py<CR>
-    nnoremap <leader>cf :%py3f ~/dotfiles/vim/clang-format.py<CR>
+    nnoremap <leader>fc :%py3f ~/dotfiles/vim/clang-format.py<CR>
 elseif has('python')
     map <C-I> :pyf ~/dotfiles/vim/clang-format-2.py<CR>
-    nnoremap <leader>cf :%pyf ~/dotfiles/vim/clang-format-2.py<CR>
+    nnoremap <leader>fc :%pyf ~/dotfiles/vim/clang-format-2.py<CR>
 endif
 
-nnoremap <leader>p :silent call <SID>Prettier()<CR>
-nnoremap <leader>y :silent call <SID>Yapf()<CR>
+nnoremap <leader>fp :silent call <SID>Prettier()<CR>
+nnoremap <leader>fy :silent call <SID>Yapf()<CR>
 
 " }}}
 " per-project .vimrc {{{
