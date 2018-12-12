@@ -205,8 +205,10 @@ let g:ctrlp_clear_cache_on_exit = 0
 " Set no file limit
 let g:ctrlp_max_files = 0
 
-" Limit CtrlP to the ancestor with a '.git' directory.
-let g:ctrlp_working_path_mode = 'ra'
+if !exists("g:ctrlp_working_path_mode")
+    " Limit CtrlP to the ancestor with a '.git' directory.
+    let g:ctrlp_working_path_mode = 'ra'
+endif
 
 " Set delay to prevent extra search
 let g:ctrlp_lazy_update = 350
@@ -225,11 +227,13 @@ if executable("ag")
           \ -g ""'
 endif
 
-" CtrlPMixed is much more useful than regular CtrlP
-let g:ctrlp_cmd = "CtrlPMixed"
-" But it needs this otherwise you get a bunch of files
-" outside the repo.
-let g:ctrlp_mruf_relative = 1
+if !exists("g:ctrlp_working_path_mode")
+    " CtrlPMixed is much more useful than regular CtrlP
+    let g:ctrlp_cmd = "CtrlPMixed"
+    " But it needs this otherwise you get a bunch of files
+    " outside the repo.
+    let g:ctrlp_mruf_relative = 1
+endif
 
 " PyMatcher for CtrlP. This speeds up matching considerably.
 if !has('python') && !has('python3')
