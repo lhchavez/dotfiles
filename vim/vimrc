@@ -53,6 +53,9 @@ Plugin 'scrooloose/syntastic'
 Plugin 'w0ng/vim-hybrid'
 
 Plugin 'fatih/vim-go'
+let g:go_fmt_options = {
+  \ 'gofmt': '-s',
+  \ }
 
 Plugin 'rdnetto/YCM-Generator'
 
