@@ -364,7 +364,7 @@ endfunction
 " Formatting {{{
 
 Glaive codefmt plugin[mappings]='<leader><Tab>'
-nnoremap <leader><Tab><Tab> :FormatLines<CR>
+nnoremap <leader><Tab><Tab> :FormatCode<CR>
 
 " }}}
 " per-project .vimrc {{{
