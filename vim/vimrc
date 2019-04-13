@@ -195,7 +195,7 @@ nnoremap <leader>rbe :vsp ~/.bashrc<CR>
 nnoremap <leader>rte :vsp ~/.tmux.conf<CR>
 
 " save session
-nnoremap <leader>s :mksession<CR>
+nnoremap <leader>S :mksession<CR>
 
 " open ag.vim
 nnoremap <leader>a :Ag 
