@@ -48,7 +48,7 @@ Plugin 'derekwyatt/vim-scala'
 
 Plugin 'scrooloose/nerdtree'
 
-Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'
 
 Plugin 'w0ng/vim-hybrid'
 
@@ -280,11 +280,14 @@ map <C-n> :silent call <SID>NERDTreeToggle()<CR>
 autocmd bufenter * if (winnr("$") == 1 && g:NERDTree.IsOpen()) | q | endif
 
 " }}}
-" Syntastic {{{
+" ALE {{{
 
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-let g:syntastic_stl_format="L%F"
+let g:ale_fixers = {
+\   'javascript': ['prettier'],
+\   'css': ['prettier'],
+\   'vue': ['prettier'],
+\}
+let g:ale_fix_on_save = 1
 
 " }}}
 " AutoGroups {{{
