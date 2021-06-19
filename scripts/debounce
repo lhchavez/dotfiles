@@ -1,0 +1,98 @@
+#!/usr/bin/python3
+"""Small script to debounce the output from inotifywait.
+
+Usage: `inotifywait ... | debounce | ...`
+"""
+
+from __future__ import print_function
+
+import argparse
+import datetime
+import queue
+import re
+import sys
+import threading
+
+from typing import Dict, List, Optional, Tuple, Set
+
+_DURATION_RE = re.compile(
+    r'((?P<hours>\d+?)h)?((?P<minutes>\d+?)m)?((?P<seconds>\d+?)s)?')
+
+
+def _parse_timedelta(time_str: str) -> datetime.timedelta:
+    parts = _DURATION_RE.match(time_str)
+    if not parts:
+        raise Exception(f'invalid timestamp string: {time_str!r}')
+    time_params: Dict[str, int] = {}
+    for name, param in parts.groupdict().items():
+        if not param:
+            continue
+        time_params[name] = int(param)
+    return datetime.timedelta(**time_params)
+
+
+def _thread(
+    events: queue.Queue[Tuple[datetime.datetime, Optional[str]]],
+    throttle: datetime.timedelta,
+) -> None:
+    while True:
+        timestamp, item = events.get()
+        tasks = 1
+        if item is None:
+            events.task_done()
+            break
+
+        deadline = timestamp + throttle
+        item_list: List[str] = [item]
+        item_set: Set[str] = set(item_list)
+
+        while True:
+            timeout = deadline - datetime.datetime.now()
+            if timeout <= datetime.timedelta():
+                break
+            try:
+                timestamp, item = events.get(timeout=timeout.total_seconds())
+                tasks += 1
+                if item is None:
+                    events.put((timestamp, item))
+                    break
+                if item in item_set:
+                    continue
+                item_set.add(item)
+                item_list.append(item)
+            except queue.Empty:
+                pass
+
+        for item in item_list:
+            print(item, end='')
+        sys.stdout.flush()
+        for _ in range(tasks):
+            events.task_done()
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--throttle',
+        default=datetime.timedelta(seconds=1),
+        type=_parse_timedelta,
+    )
+    args = parser.parse_args()
+
+    events: queue.Queue[Tuple[datetime.datetime,
+                              Optional[str]]] = queue.Queue()
+    thread = threading.Thread(target=_thread, args=(events, args.throttle))
+    thread.start()
+
+    try:
+        for line in sys.stdin:
+            events.put((datetime.datetime.now(), line))
+    except KeyboardInterrupt:
+        pass
+
+    events.put((datetime.datetime.now(), None))
+    thread.join()
+
+
+if __name__ == '__main__':
+    _main()
