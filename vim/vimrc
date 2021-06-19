@@ -204,7 +204,7 @@ nnoremap <leader>a :Ag
 nnoremap <leader>] :YcmCompleter GoToDefinition<CR>
 
 " Pretty-print JSON
-nnoremap <leader>j :%!python -m json.tool<CR>:set syntax=json<CR>
+nnoremap <leader>j :%!python3 -m json.tool<CR>:set syntax=json<CR>
 
 " Language Server
 nnoremap <leader>ld :LspDefinition<CR>
